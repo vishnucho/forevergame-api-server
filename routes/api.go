@@ -34,26 +34,22 @@ func RegisterAPIRoutes(r *gin.Engine) {
 		{
 			// 登录
 			lgc := new(auth.LoginController)
-			authGroup.POST("/login/using-phone", middlewares.GuestJWT(), lgc.LoginByPhone)
 			authGroup.POST("/login/using-password", middlewares.GuestJWT(), lgc.LoginByPassword)
 			authGroup.POST("/login/refresh-token", middlewares.AuthJWT(), lgc.RefreshToken)
 
 			// 重置密码
 			pwc := new(auth.PasswordController)
 			authGroup.POST("/password-reset/using-email", middlewares.GuestJWT(), pwc.ResetByEmail)
-			authGroup.POST("/password-reset/using-phone", middlewares.GuestJWT(), pwc.ResetByPhone)
 
 			// 注册用户
 			suc := new(auth.SignupController)
-			authGroup.POST("/signup/using-phone", middlewares.GuestJWT(), suc.SignupUsingPhone)
 			authGroup.POST("/signup/using-email", middlewares.GuestJWT(), suc.SignupUsingEmail)
-			authGroup.POST("/signup/phone/exist", middlewares.GuestJWT(), middlewares.LimitPerRoute("60-H"), suc.IsPhoneExist)
 			authGroup.POST("/signup/email/exist", middlewares.GuestJWT(), middlewares.LimitPerRoute("60-H"), suc.IsEmailExist)
 
 			// 发送验证码
 			vcc := new(auth.VerifyCodeController)
-			authGroup.POST("/verify-codes/phone", middlewares.LimitPerRoute("20-H"), vcc.SendUsingPhone)
 			authGroup.POST("/verify-codes/email", middlewares.LimitPerRoute("20-H"), vcc.SendUsingEmail)
+
 			// 图片验证码
 			authGroup.POST("/verify-codes/captcha", middlewares.LimitPerRoute("50-H"), vcc.ShowCaptcha)
 
